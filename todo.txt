@@ -1,0 +1,14 @@
+TODO
+
+* fix the bug where the snake has two parts but only one is showing
+* add pause handling
+* add own classes
+* optimize code
+* search for bugs
+* add more comments
+* change namespace
+* add classic arcade scoreboard
+* fix the slowdown when snake becomes bigger
+* fix indenting
+* Write a linux start.sh
+* Show score and extras in the menu dynamically
