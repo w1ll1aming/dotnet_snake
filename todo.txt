@@ -6,9 +6,8 @@ TODO
 * optimize code
 * search for bugs
 * add more comments
-* change namespace
 * add classic arcade scoreboard
 * fix the slowdown when snake becomes bigger
 * fix indenting
-* Write a linux start.sh
+* Write a linux build.sh
 * Show score and extras in the menu dynamically
