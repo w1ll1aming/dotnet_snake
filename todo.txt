@@ -11,3 +11,4 @@ TODO
 * fix indenting
 * Write a linux build.sh
 * Show score and extras in the menu dynamically
+* Add configuration file
