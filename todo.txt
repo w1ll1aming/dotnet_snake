@@ -12,4 +12,3 @@ TODO
 * Write a linux build.sh
 * Show score and extras in the menu dynamically
 * Add game configuration file
-* Test
