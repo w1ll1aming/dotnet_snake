@@ -1,13 +1,11 @@
 using System;
 using System.Threading;
 using System.Collections.Generic;
+using System.Diagnostics;
 
-namespace dotnet_snake 
-{
-    public class SnakeCoords
-    {
-        public SnakeCoords(int x, int y)
-        {
+namespace dotnet_snake {
+    public class SnakeCoords {
+        public SnakeCoords(int x, int y) {
             X = x;
             Y = y;
         }
@@ -16,18 +14,15 @@ namespace dotnet_snake
         public int Y { get; set; }
     }
 
-    public enum snake_direction
-    {
+    public enum snake_direction {
         Up,
         Down,
         Left,
         Right
     }
 
-    class Snake
-    {
-        public Snake(List<SnakeCoords> _body, int _speed, ConsoleKey _selectedkey, ConsoleKey _lastselectedkey, (int, int) _lastcordinates, snake_direction _direction)
-        {
+    class Snake {
+        public Snake(List<SnakeCoords> _body, int _speed, ConsoleKey _selectedkey, ConsoleKey _lastselectedkey, (int, int) _lastcordinates, snake_direction _direction) {
             Speed = _speed;
             Body = _body;
             SelectedKey = _selectedkey;
@@ -42,58 +37,58 @@ namespace dotnet_snake
         public (int, int) lastCordinates { get; set; }
         public snake_direction Direction { get; set; }
 
-        public static void Move(ref Snake mysnake, ref SnakeCoords myfood, ref GameStats stats)
-        {
+        public static void Move(ref Snake mysnake, ref SnakeCoords myfood, ref GameStats stats) {
             try {
-                while (!stats.GameOver)
-                {
-                    for (int i = mysnake.Body.Count - 1; i >= 0; i--)
-                    {
-                        if (i == 0)
+                while (!stats.GameOver) {
+                    if (!stats.GamePaused) {
+                        for (int i = mysnake.Body.Count - 1; i >= 0; i--)
                         {
-                            switch (mysnake.Direction)
+                            if (i == 0)
                             {
-                                case snake_direction.Right:
-                                    mysnake.Body[i].X++;
-                                    break;
-                                case snake_direction.Left:
-                                    mysnake.Body[i].X--;
-                                    break;
-                                case snake_direction.Up:
-                                    mysnake.Body[i].Y--;
-                                    break;
-                                case snake_direction.Down:
-                                    mysnake.Body[i].Y++;
-                                    break;
-                            }
+                                switch (mysnake.Direction)
+                                {
+                                    case snake_direction.Right:
+                                        mysnake.Body[i].X++;
+                                        break;
+                                    case snake_direction.Left:
+                                        mysnake.Body[i].X--;
+                                        break;
+                                    case snake_direction.Up:
+                                        mysnake.Body[i].Y--;
+                                        break;
+                                    case snake_direction.Down:
+                                        mysnake.Body[i].Y++;
+                                        break;
+                                }
 
-                            if (
-                                mysnake.Body[i].X < 0 || mysnake.Body[i].Y < 2 ||
-                                mysnake.Body[i].X > Console.WindowWidth || mysnake.Body[i].Y > (Console.WindowHeight) // - topbar height
-                            ) die(stats: ref stats);
+                                if (
+                                    mysnake.Body[i].X < 0 || mysnake.Body[i].Y < 2 || /* the topbar is using two pixels of the console but the snake shouldnt touch those. */
+                                    mysnake.Body[i].X > Console.WindowWidth || mysnake.Body[i].Y > (Console.WindowHeight)
+                                ) die(stats: ref stats);
 
-                            for (int j = 1; j < mysnake.Body.Count; j++)
-                            {
-                                if (mysnake.Body[i].X == mysnake.Body[j].X && mysnake.Body[i].Y == mysnake.Body[j].Y) die(stats: ref stats);
+                                //Debug.WriteLine($"Snake body part I: {i}, {mysnake.Body[i].X} {mysnake.Body[i].Y}");
+                                for (int j = 1; j < mysnake.Body.Count; j++) {
+                                    //Debug.WriteLine($"Snake body part J: {j}, {mysnake.Body[j].X} {mysnake.Body[j].Y}");
+                                    if (mysnake.Body[i].X == mysnake.Body[j].X && mysnake.Body[i].Y == mysnake.Body[j].Y) die(stats: ref stats);
+                                }
+                                if (mysnake.Body[0].X == myfood.X && mysnake.Body[0].Y == myfood.Y) eat(
+                                    mysnake: ref mysnake,
+                                    myfood: ref myfood,
+                                    stats: ref stats
+                                );
                             }
-                            if (mysnake.Body[0].X == myfood.X && mysnake.Body[0].Y == myfood.Y) eat(
+                            else {
+                                mysnake.Body[i].X = mysnake.Body[i - 1].X;
+                                mysnake.Body[i].Y = mysnake.Body[i - 1].Y;
+                            }
+                            Program.Draw(
                                 mysnake: ref mysnake,
                                 myfood: ref myfood,
                                 stats: ref stats
                             );
                         }
-                        else
-                        {
-                            mysnake.Body[i].X = mysnake.Body[i - 1].X;
-                            mysnake.Body[i].Y = mysnake.Body[i - 1].Y;
-                        }
-                        Program.Draw(
-                            mysnake: ref mysnake,
-                            myfood: ref myfood,
-                            stats: ref stats
-                        );
+                        Thread.Sleep(mysnake.Speed);
                     }
-                    Thread.Sleep(mysnake.Speed);
                 }
             }
             catch (Exception ex) { Console.WriteLine(ex.Message); Environment.Exit(1); }

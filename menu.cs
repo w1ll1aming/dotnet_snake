@@ -1,16 +1,14 @@
 using System;
 using System.Diagnostics;
 
-namespace dotnet_snake 
-{
-    static class menu 
-    {
+namespace dotnet_snake {
+    static class menu {
         public enum Type {
             Main,
             Pause
         }
 
-        public static int Show(string[] items, Type type) {
+        public static int Show(string[] items, Type type, ref GameStats stats) {
             ConsoleKeyInfo keyinfo = new ConsoleKeyInfo();
             int index = 0;
             bool item_selected = false;
@@ -38,6 +36,11 @@ namespace dotnet_snake
                         break;
                 }
                 
+                Tuple<int, int> oldcursorpos = new Tuple<int, int> (Console.CursorLeft, Console.CursorTop);
+                Console.SetCursorPosition(0,0);
+                Console.WriteLine($"Score: {stats.Score}");
+                Console.SetCursorPosition(oldcursorpos.Item1, oldcursorpos.Item2);
+
                 Debug.WriteLine(index);
                 Console.SetCursorPosition(0, (Console.WindowHeight / 2)-items.Length);
                 

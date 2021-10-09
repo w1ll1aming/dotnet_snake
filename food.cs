@@ -1,7 +1,6 @@
 using System;
 
-namespace dotnet_snake 
-{
+namespace dotnet_snake {
     static class food {
         public static void GenerateFood(ref SnakeCoords myfood) {
             Random rand = new Random();
