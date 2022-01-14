@@ -5,7 +5,6 @@ tput smcup
 
 function cleanup {
     tput rmcup
-    # Your cleanup code here
 }
 dotnet run
 trap cleanup EXIT
